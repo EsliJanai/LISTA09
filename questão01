@@ -1,0 +1,57 @@
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/CadastroUsuarioServlet")
+public class CadastroUsuarioServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Recuperar parâmetros do formulário
+        String nome = request.getParameter("nome");
+        String email = request.getParameter("email");
+        String curso = request.getParameter("curso");
+        String empresa = request.getParameter("empresa");
+        String corFavorita = request.getParameter("corFavorita");
+
+        // Aqui você pode salvar os dados em um banco de dados ou fazer o que for necessário com eles
+
+        // Redirecionar para uma página de confirmação
+        response.sendRedirect("confirmacaoCadastro.jsp");
+    }
+}
+
+
+
+
+
+
+
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+<head>
+    <title>Formulário de Cadastro</title>
+</head>
+<body>
+    <form action="CadastroUsuarioServlet" method="post">
+        <h2>Informações Pessoais:</h2>
+        Nome: <input type="text" name="nome" required><br>
+        Email: <input type="email" name="email" required><br>
+
+        <h2>Informações Acadêmicas:</h2>
+        Curso: <input type="text" name="curso" required><br>
+
+        <h2>Informações Profissionais:</h2>
+        Empresa: <input type="text" name="empresa" required><br>
+
+        <h2>Cor Favorita:</h2>
+        <input type="color" name="corFavorita" required><br>
+
+        <input type="submit" value="Cadastrar">
+    </form>
+</body>
+</html>
