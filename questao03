@@ -1,0 +1,81 @@
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+@WebServlet("/SessionServlet")
+public class SessionServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession(true);
+
+        // Obter o ID da sessão
+        String sessionId = session.getId();
+
+        // Obter a data e hora da criação da sessão
+        Date creationTime = new Date(session.getCreationTime());
+        String creationTimeString = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(creationTime);
+
+        // Obter a data e hora do último acesso
+        Date lastAccessTime = new Date(session.getLastAccessedTime());
+        String lastAccessTimeString = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(lastAccessTime);
+
+        // Atualizar o contador de sessões
+        int sessionCount = 1;
+        if (session.getAttribute("sessionCount") != null) {
+            sessionCount = (int) session.getAttribute("sessionCount");
+            sessionCount++;
+
+            // Mostrar mensagem após a 5ª sessão
+            if (sessionCount == 5) {
+                request.setAttribute("message", "Esta é a 5ª sessão!");
+            }
+        }
+        session.setAttribute("sessionCount", sessionCount);
+
+        // Configurar atributos para exibição na página JSP
+        request.setAttribute("sessionId", sessionId);
+        request.setAttribute("creationTime", creationTimeString);
+        request.setAttribute("lastAccessTime", lastAccessTimeString);
+
+        // Encaminhar para a página JSP
+        request.getRequestDispatcher("/sessionInfo.jsp").forward(request, response);
+    }
+}
+
+
+
+Página JSP para exibir informações da sessão (sessionInfo.jsp):
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Informações da Sessão</title>
+</head>
+<body>
+    <h1>Informações da Sessão</h1>
+    <p>ID da Sessão: ${sessionId}</p>
+    <p>Data e Hora de Criação: ${creationTime}</p>
+    <p>Data e Hora do Último Acesso: ${lastAccessTime}</p>
+    
+    <% if (request.getAttribute("message") != null) { %>
+        <p>${request.getAttribute("message")}</p>
+    <% } %>
+</body>
+</html>
+
+
+
+
+
+
