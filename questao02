@@ -1,0 +1,54 @@
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/ExibirDadosCookieServlet")
+public class ExibirDadosCookieServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Recuperar dados dos cookies
+        Cookie[] cookies = request.getCookies();
+
+        // Parâmetros para serem enviados para a JSP
+        String nome = "";
+        String email = "";
+        String curso = "";
+        String empresa = "";
+        String corFavorita = "";
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                switch (cookie.getName()) {
+                    case "nome":
+                        nome = cookie.getValue();
+                        break;
+                    case "email":
+                        email = cookie.getValue();
+                        break;
+                    case "curso":
+                        curso = cookie.getValue();
+                        break;
+                    case "empresa":
+                        empresa = cookie.getValue();
+                        break;
+                    case "corFavorita":
+                        corFavorita = cookie.getValue();
+                        break;
+                }
+            }
+        }
+
+        // Adicionar os atributos para a requisição e encaminhar para a JSP
+        request.setAttribute("nome", nome);
+        request.setAttribute("email", email);
+        request.setAttribute("curso", curso);
+        request.setAttribute("empresa", empresa);
+        request.setAttribute("corFavorita", corFavorita);
+
+        request
